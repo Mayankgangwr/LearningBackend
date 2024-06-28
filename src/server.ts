@@ -1,16 +1,24 @@
-import express, { Express, Request, Response } from 'express';
-import taskRoutes from './routes/tasks';
+import dotenv from "dotenv";
+import connectDB from './config/index';
+import app from "./app";
 
-const app: Express = express();
-const port = process.env.PORT || 4000;
+dotenv.config({
+  path: './.env'
+})
 
-app.use(express.json()); // Add this line to enable JSON parsing in the request body
-app.use('/tasks', taskRoutes); // Add this line to mount the Task API routes
+connectDB()
+  .then(() => {
+    const port = process.env.PORT || 8000;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, TypeScript Express!');
-});
+    app.on("error", (err) => {
+      console.log("Error", err);
+      throw err;
+    });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+    app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}`);
+    });
+  })
+  .catch((err) => {
+    console.log("MONGODB connection failed !! ", err);
+  });
