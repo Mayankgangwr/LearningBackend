@@ -1,20 +1,20 @@
-import mongoose, { Schema } from "mongoose";
-import { paymentModel } from "./interface";
+import mongoose, { Model, Schema } from "mongoose";
+import { IAccountDetails, IPayment, IUPIDetails } from "./interface";
 
-const accountDetailsSchema: Schema = new mongoose.Schema({
+const accountDetailsSchema: Schema<IAccountDetails> = new mongoose.Schema({
     accountName: { type: String, required: true },
     accountNumber: { type: String, required: true },
     bankName: { type: String, required: true },
     ifscCode: { type: String, required: true },
 });
 
-const upiDetailsSchema: Schema = new mongoose.Schema({
+const upiDetailsSchema: Schema<IUPIDetails> = new mongoose.Schema({
     upiId: { type: String, required: true },
     upiTransactionId: { type: String, required: true },
 });
 
-const paymentSchema: Schema = new mongoose.Schema({
-    restroId: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
+const paymentSchema: Schema<IPayment> = new mongoose.Schema({
+    orderId: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
     transactionId: { type: String, required: true },
     tax: { type: Number, required: true },
     discount: { type: Number, required: true },
@@ -24,10 +24,10 @@ const paymentSchema: Schema = new mongoose.Schema({
     upiDetails: { type: upiDetailsSchema, required: false },
     status: { type: Boolean, required: true },
 },
-{
-    timestamps: true
-});
+    {
+        timestamps: true
+    });
 
-const Payment = mongoose.model<paymentModel>("Payment", paymentSchema);
+const Payment: Model<IPayment> = mongoose.model<IPayment>("Payment", paymentSchema);
 
 export default Payment;

@@ -1,7 +1,7 @@
-import mongoose, { Schema } from "mongoose";
-import { workerModel } from "./interface";
+import mongoose, { Model, Schema } from "mongoose";
+import { IWorker } from "./interface";
 
-const workerSchema: Schema = new mongoose.Schema({
+const workerSchema: Schema<IWorker> = new mongoose.Schema({
     restroId: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
     roleId: { type: mongoose.Schema.Types.ObjectId, ref: "WorkerRole", required: true },
     shiftId: { type: mongoose.Schema.Types.ObjectId, ref: "WorkerShift", required: true },
@@ -26,6 +26,6 @@ const workerSchema: Schema = new mongoose.Schema({
     }
 );
 
-const Worker = mongoose.model<workerModel>("Worker", workerSchema);
+const Worker: Model<IWorker> = mongoose.model<IWorker>("Worker", workerSchema);
 
 export default Worker;

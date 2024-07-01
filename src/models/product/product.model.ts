@@ -1,7 +1,7 @@
-import mongoose, { Schema } from "mongoose";
-import { productModel } from "./interface";
+import mongoose, { Model, Schema } from "mongoose";
+import { IProduct } from "./interface";
 
-const productSchema = new mongoose.Schema({
+const productSchema: Schema<IProduct> = new mongoose.Schema({
     restroId: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
     categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "ProductCategoty", required: true },
     displayName: { type: String, required: true },
@@ -15,6 +15,6 @@ const productSchema = new mongoose.Schema({
     }
 );
 
-const Product = mongoose.model<productModel>("Product", productSchema);
+const Product: Model<IProduct> = mongoose.model<IProduct>("Product", productSchema);
 
 export default Product;

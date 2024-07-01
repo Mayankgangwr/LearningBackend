@@ -1,8 +1,8 @@
-import { Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-export interface productModel extends Document {
-    restroId: string;
-    categoryId: string;
+export interface IProduct extends Document {
+    restroId: mongoose.Schema.Types.ObjectId;
+    categoryId: mongoose.Schema.Types.ObjectId;
     displayName: string;
     description: string;
     price: number;
@@ -10,7 +10,7 @@ export interface productModel extends Document {
     status: boolean;
 }
 
-export interface productCategotyModel extends Document {
-    restroId: string;
+export interface IProductCategoty extends Document {
+    restroId: mongoose.Schema.Types.ObjectId;
     displayName: string;
 }

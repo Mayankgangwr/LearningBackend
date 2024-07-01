@@ -1,8 +1,8 @@
-import { Document } from 'mongoose';
-export interface workerModel extends Document {
-    roleId: string;
-    shiftId: string;
-    restroId: string;
+import mongoose, { Document } from 'mongoose';
+export interface IWorker extends Document {
+    roleId: mongoose.Schema.Types.ObjectId;
+    shiftId: mongoose.Schema.Types.ObjectId;
+    restroId: mongoose.Schema.Types.ObjectId;
     displayName: string;
     username: string;
     password: string;
@@ -16,16 +16,16 @@ export interface workerModel extends Document {
     city: string;
     state: string;
     country: string;
-  pincode: string
+    pincode: string
     isLoggedIn: boolean;
 }
 
-export interface workerRoleModel extends Document {
-    restroId: string;
+export interface IWorkerRole extends Document {
+    restroId: mongoose.Schema.Types.ObjectId;
     displayName: string;
 }
 
-export interface workerShiftModel extends Document {
-    restroId: string;
+export interface IWorkerShift extends Document {
+    restroId: mongoose.Schema.Types.ObjectId;
     displayName: string;
 }

@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-export interface restaurantModel extends Document {
+export interface IRestaurant extends Document {
     displayName: string;
     username: string;
     password: string;

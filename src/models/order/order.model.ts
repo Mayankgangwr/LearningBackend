@@ -1,25 +1,26 @@
-import mongoose, { Schema } from "mongoose";
-import { orderModel } from "./interface";
+import mongoose, { Model, Schema } from "mongoose";
+import { IOrder, IOrderedProduct } from "./interface";
 
-const itemSchema: Schema = new mongoose.Schema({
-    proId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+const itemSchema: Schema<IOrderedProduct> = new mongoose.Schema({
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
     price: { type: Number, required: true },
     quantity: { type: Number, required: true }
 });
 
-const orderSchema: Schema = new mongoose.Schema({
+const orderSchema: Schema<IOrder> = new mongoose.Schema({
     restroId: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
     statusId: { type: mongoose.Schema.Types.ObjectId, ref: "OrderStatus", required: true },
     items: [itemSchema],
     customerName: { type: String, required: true },
-    tableNumber: { type: String, required: true },
+    tableNumber: { type: Number, required: true },
     totalAmount: { type: Number, required: true },
 },
     {
         timestamps: true
     }
-);
+)
 
-const Order = mongoose.model<orderModel>("Order", orderSchema);
+
+const Order: Model<IOrder> = mongoose.model<IOrder>("Order", orderSchema);
 
 export default Order;
