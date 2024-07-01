@@ -1,5 +1,7 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IWorker } from "./interface";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"
 
 const workerSchema: Schema<IWorker> = new mongoose.Schema({
     restroId: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
@@ -25,6 +27,48 @@ const workerSchema: Schema<IWorker> = new mongoose.Schema({
         timestamps: true
     }
 );
+
+workerSchema.pre<IWorker>("save", async function (next) {
+    if (!this.isModified("password")) return next();
+
+    try {
+        const hashedPassword = await bcrypt.hash(this.password, 10);
+        this.password = hashedPassword;
+        next();
+    } catch (err: any) {
+        next(err);
+    }
+});
+
+workerSchema.methods.isPasswordCorrect = async function (password: string) {
+    return await bcrypt.compare(password, this.password)
+}
+
+workerSchema.methods.generateAccessToken = function () {
+    return jwt.sign(
+        {
+            _id: this._id,
+            displayName: this.displayName,
+            username: this.username,
+        },
+        process.env.ACCESS_TOKEN_SECRET || "D2DDDC74FD7D3F6FD138F36EDCF18",
+        {
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "1d"
+        }
+    )
+}
+
+workerSchema.methods.generateRefereshToken = function () {
+    return jwt.sign(
+        {
+            _id: this._id,
+        },
+        process.env.REFRESH_TOKEN_SECRET || "D2DDDC74FD7D3F6FD138F36EDCF18",
+        {
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "1d"
+        }
+    )
+}
 
 const Worker: Model<IWorker> = mongoose.model<IWorker>("Worker", workerSchema);
 
