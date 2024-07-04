@@ -15,7 +15,7 @@ const restaurantSchema: Schema<IRestaurant> = new mongoose.Schema<IRestaurant>({
     state: { type: String, required: true },
     country: { type: String, required: true },
     pincode: { type: String, required: true },
-    refreshToken: { type: String, required: true, default: "" },
+    refreshToken: { type: String, default: undefined },
     status: { type: Boolean, required: true, default: true }
 },
     {
@@ -53,14 +53,16 @@ restaurantSchema.methods.generateAccessToken = function () {
     )
 }
 
-restaurantSchema.methods.generateRefereshToken = function () {
+
+restaurantSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
             _id: this._id,
+            username: this.username,
         },
-        process.env.REFRESH_TOKEN_SECRET || "D2DDDC74FD7D3F6FD138F36EDCF18",
+        process.env.REFRESH_TOKEN_SECRET || "99558DF847436FBCAFA92FA1EF1DD",
         {
-            expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "1d"
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "10d"
         }
     )
 }

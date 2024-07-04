@@ -6,7 +6,9 @@ import { asyncHandler } from "../utils/asyncHandler";
 import { Request, Response } from "express";
 import { uploadOnCloudinary } from "../utils/cloudinary";
 import { ApiResponse } from "../utils/apiResponse";
-import mongoose from "mongoose";
+import { AuthRequest } from "../types";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { options } from "../constants";
 
 
 // 4 parameter can passed in controller (error, request, response and next)
@@ -79,12 +81,11 @@ const registerRestaurant = asyncHandler(async (req: Request, res: Response) => {
     );
 });
 
+// Generate access and refresh tokens
 const generateAccessAndRefereshToken = async (restaurantId: any) => {
     try {
-
         // Find the restaurant based on restaurant id
         const restaurant = await Restaurant.findById(restaurantId);
-
         if (!restaurant) {
             throw new ApiError(400, "Restaurant does not exist!");
         }
@@ -103,7 +104,6 @@ const generateAccessAndRefereshToken = async (restaurantId: any) => {
         throw new ApiError(500, "Something went worng while generating refresh and access token")
     }
 }
-
 
 // Controller for logging in a restaurant
 const loginRestaurant = asyncHandler(async (req: Request, res: Response) => {
@@ -139,45 +139,69 @@ const loginRestaurant = asyncHandler(async (req: Request, res: Response) => {
 
     const restaurantResponse = await Restaurant.findById(restaurant._id).select("-password -refreshToken")
 
-    const options = {
-        httpOnly: true,
-        secure: true
-    }
-
+    // Return a successful response after login restaurant data
     return res
-    .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
-    .json(
-        new ApiResponse(200, {
-            message: "Login successful",
-            accessToken, // Optionally return tokens in response body if needed
-            refreshToken
-        })
-    )
-
-
-    // Set tokens in secure cookies
-    res.cookie('access_token', accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'develop', // Use secure cookies in develop
-        maxAge: 24 * 60 * 60 * 1000 // 1 day
-    });
-
-    res.cookie('refresh_token', refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'develop', // Use secure cookies in develop
-        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
-    });
-
-    // Send a success response
-    res.status(200).json(
-        new ApiResponse(200, {
-            message: "Login successful",
-            accessToken, // Optionally return tokens in response body if needed
-            refreshToken
-        })
-    );
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(new ApiResponse(
+            200,
+            { restaurant: restaurantResponse, accessToken, refreshToken },
+            "Restaurant logged In Successfully"
+        ));
 });
 
-export { registerRestaurant };
+// Controller for logout a restaurant
+const logoutRestaurant = asyncHandler(async (req: AuthRequest, res: Response) => {
+    await Restaurant.findByIdAndUpdate(
+        req.user._id,
+        { $set: { refreshToken: undefined } },
+        { new: true }
+    );
+
+    return res
+        .status(200)
+        .clearCookie("accessToken", options)
+        .clearCookie("refreshToken", options)
+        .json(new ApiResponse(200, {}, "Restaurant logged out seccessfully"))
+});
+
+// Controller for refresh access token to a restaurant
+const refreshAccessToken = asyncHandler(async (req: Request, res: Response) => {
+    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+
+    if (!incomingRefreshToken) throw new ApiError(401, "Unauthorized request")
+
+    try {
+        const decodedToken = jwt.verify(
+            incomingRefreshToken,
+            String(process.env.REFRESH_TOKEN_SECRET)
+        ) as JwtPayload
+
+        const restaurant = await Restaurant.findById(decodedToken._id);
+
+        if (!restaurant) throw new ApiError(401, "Invalid refresh token")
+
+        if (incomingRefreshToken !== restaurant?.refreshToken) throw new ApiError(401, "Refresh token is expired or used")
+
+        // Generate access and refresh tokens
+        const { accessToken, refreshToken } = await generateAccessAndRefereshToken(restaurant._id)
+
+        // Return a successful response after generating refresh and access token
+        return res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(new ApiResponse(
+                200,
+                { accessToken, refreshToken },
+                "Access token refreshed"
+            ));
+    } catch (error) {
+        throw new ApiError(401, "Invalid refresh token")
+    }
+
+
+});
+
+export { registerRestaurant, loginRestaurant, logoutRestaurant, refreshAccessToken };

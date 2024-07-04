@@ -1,14 +1,19 @@
 import { Router } from "express";
-import { registerRestaurant } from "../controllers/restaurant.controller";
+import { loginRestaurant, logoutRestaurant, refreshAccessToken, registerRestaurant } from "../controllers/restaurant.controller";
 import { uploadFile } from "../middlewares/multer.middleware";
-import multer from "multer";
+import { verifyRestaurantJWT } from "../middlewares/auth.middleware";
 
 const router = Router();
-const upload = multer({ dest: './public/temp/' }); // Configure multer for file storage
 
 router.route("/resgister").post(
     uploadFile.single('avatar'),
     registerRestaurant
 );
+router.route("/login").post(loginRestaurant);
+
+// secured routes
+router.route("/logout").post(verifyRestaurantJWT, logoutRestaurant);
+
+router.route("/refresh-token").post(refreshAccessToken);
 
 export default router;
