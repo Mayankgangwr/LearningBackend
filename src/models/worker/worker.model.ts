@@ -11,7 +11,7 @@ const workerSchema: Schema<IWorker> = new mongoose.Schema({
     username: { type: String, required: true },
     password: { type: String, required: true },
     position: { type: String, required: true },
-    imageUrl: { type: String, required: true },
+    avatar: { type: String, required: true },
     phoneNumber: { type: String, required: true },
     dob: { type: Number, required: true },
     aadharCard: { type: String, required: true },

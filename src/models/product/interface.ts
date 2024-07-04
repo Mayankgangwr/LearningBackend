@@ -6,7 +6,7 @@ export interface IProduct extends Document {
     displayName: string;
     description: string;
     price: number;
-    imageUrl: string;
+    avatar: string;
     status: boolean;
 }
 

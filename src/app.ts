@@ -18,15 +18,31 @@ app.use(express.urlencoded({ extended: true, limit: "20kb" }));
 
 app.use(express.static("public"));
 
-app.use(cookieParser())
+app.use(cookieParser());
+
+//routes import
+import restaurantRouter from './routes/restaurant.router';
+
+//routes declaration
+
+/*
+i wrote the route api/v1/restaurant
+
+i have used api because it's api only 
+i have used v1 because it is the version one of these api
+i have used api because it's api only 
+i have used restaurant because this api for restaurant
+ */
+
+app.use("/api/v1/restaurant", restaurantRouter)
+
+
+
+
 
 app.get('/', (req: Request, res: Response) => {
-    res.send("Hello World!")
+    res.send(process.env.CLOUDINARY_NAME)
 })
 
-app.use('/api', (req, res) => {
-    const url = `https://carapi.app${req.url}`;
-    req.pipe(request(url)).pipe(res);
-  });
 
 export default app;

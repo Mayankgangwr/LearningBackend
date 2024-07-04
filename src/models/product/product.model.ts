@@ -7,7 +7,7 @@ const productSchema: Schema<IProduct> = new mongoose.Schema({
     displayName: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: Number, required: true },
-    imageUrl: { type: String, required: true },
+    avatar: { type: String, required: true },
     status: { type: Boolean, required: true },
 },
     {

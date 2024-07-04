@@ -1,13 +1,13 @@
 import mongoose, { Model, Schema } from 'mongoose';
 import { IRestaurant } from "./interface";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const restaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
+const restaurantSchema: Schema<IRestaurant> = new mongoose.Schema<IRestaurant>({
     displayName: { type: String, required: true },
-    username: { type: String, required: true, unique: true, match: /^[a-zA-Z0-9]+$/ },
+    username: { type: String, required: true, unique: true, },
     password: { type: String, required: true },
-    imageUrl: { type: String },
+    avatar: { type: String },
     managerName: { type: String },
     phoneNumber: { type: String, required: true },
     address: { type: String, required: true },
@@ -15,6 +15,7 @@ const restaurantSchema: Schema<IRestaurant> = new mongoose.Schema({
     state: { type: String, required: true },
     country: { type: String, required: true },
     pincode: { type: String, required: true },
+    refreshToken: { type: String, required: true, default: "" },
     status: { type: Boolean, required: true, default: true }
 },
     {

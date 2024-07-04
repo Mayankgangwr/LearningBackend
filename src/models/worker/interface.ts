@@ -7,7 +7,7 @@ export interface IWorker extends Document {
     username: string;
     password: string;
     position: string;
-    imageUrl: string;
+    avatar: string;
     phoneNumber: string;
     dob: number;
     aadharCard: string;
