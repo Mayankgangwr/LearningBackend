@@ -3,7 +3,7 @@ import { IWorker } from "./interface";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 
-const workerSchema: Schema<IWorker> = new mongoose.Schema({
+const workerSchema: Schema<IWorker> = new mongoose.Schema<IWorker>({
     restroId: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
     roleId: { type: mongoose.Schema.Types.ObjectId, ref: "WorkerRole", required: true },
     shiftId: { type: mongoose.Schema.Types.ObjectId, ref: "WorkerShift", required: true },

@@ -2,7 +2,7 @@ import mongoose, { Model, Schema } from "mongoose";
 import { IWorkerRole } from "./interface";
 
 
-const workerRoleSchema: Schema<IWorkerRole> = new mongoose.Schema({
+const workerRoleSchema: Schema<IWorkerRole> = new mongoose.Schema<IWorkerRole>({
     restroId: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
     displayName: { type: String, required: true }
 },

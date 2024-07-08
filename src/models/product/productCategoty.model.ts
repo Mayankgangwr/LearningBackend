@@ -1,7 +1,7 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IProductCategoty } from "./interface";
 
-const productCategotySchema: Schema<IProductCategoty> = new mongoose.Schema({
+const productCategotySchema: Schema<IProductCategoty> = new mongoose.Schema<IProductCategoty>({
     restroId: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true },
     displayName: { type: String, required: true }
 },
