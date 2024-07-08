@@ -7,7 +7,6 @@ import { AuthRequest } from "../types";
 import Worker from "../models/worker/worker.model";
 
 
-
 // Function to decode JWT and return the payload
 const decodedJWT = async (accessToken: string): Promise<JwtPayload> => {
     if (!accessToken) throw new ApiError(401, "Unauthorized request");
