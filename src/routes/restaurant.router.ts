@@ -72,4 +72,14 @@ router.put("/change-password",
     changeCurrentPassword  // Controller to handle password change
 );
 
+/**
+ * @route PATCH /api/restaurants/update-details
+ * @desc Update the current restaurant's details
+ * @access Private (requires authentication)
+ */
+router.patch("/update-details", 
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    updateRestaurantDetails  // Controller to handle details update
+);
+
 export default router;
