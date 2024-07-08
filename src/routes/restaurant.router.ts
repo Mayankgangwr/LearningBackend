@@ -62,4 +62,14 @@ router.get("/me",
     getCurrentRestaurant  // Controller to get current restaurant details
 );
 
+/**
+ * @route PUT /api/restaurants/change-password
+ * @desc Change the current restaurant's password
+ * @access Private (requires authentication)
+ */
+router.put("/change-password", 
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    changeCurrentPassword  // Controller to handle password change
+);
+
 export default router;
