@@ -1,6 +1,6 @@
 import mongoose, { Model, Schema } from "mongoose";
 import { IWorker } from "./interface";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 
 const workerSchema: Schema<IWorker> = new mongoose.Schema<IWorker>({
