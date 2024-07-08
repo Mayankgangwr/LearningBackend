@@ -82,4 +82,15 @@ router.patch("/update-details",
     updateRestaurantDetails  // Controller to handle details update
 );
 
+/**
+ * @route PATCH /api/restaurants/update-avatar
+ * @desc Update the current restaurant's avatar
+ * @access Private (requires authentication)
+ */
+router.patch("/update-avatar", 
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    uploadFile.single('avatar'),  // Middleware to handle avatar file upload
+    updateRestaurantAvatar  // Controller to handle avatar update
+);
+
 export default router;
