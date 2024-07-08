@@ -241,6 +241,23 @@ const changeCurrentPassword = asyncHandler(async (req: AuthRequest, res: Respons
     }
 });
 
+// Controller for getting the current logged restaurant
+const getCurrentRestaurant = asyncHandler(async (req: AuthRequest, res: Response) => {
+    try {
+        // Get restaurant by using user id pushed at middleware
+        const restaurant = await Restaurant.findById(req.user._id).select("-password -refreshToken");
+
+        if (!restaurant) throw new ApiError(401, "Invalid refresh token");
+
+        // Return a successful response of the current logged restaurant
+        return res
+            .status(200)
+            .json(new ApiResponse(200, restaurant, "Current user fetched successfully"));
+    } catch (error) {
+        throw new ApiError(500, "An error occurred while fetching the current restaurant");
+    }
+});
+
 
 export {
     registerRestaurant,
@@ -248,4 +265,5 @@ export {
     logoutRestaurant,
     refreshAccessToken,   
     changeCurrentPassword,
+    getCurrentRestaurant,
 };
