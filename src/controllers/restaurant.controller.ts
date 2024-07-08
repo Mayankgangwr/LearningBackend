@@ -211,6 +211,35 @@ const refreshAccessToken = asyncHandler(async (req: Request, res: Response) => {
     }
 });
 
+// Controller for changing the current logged restaurant password
+const changeCurrentPassword = asyncHandler(async (req: AuthRequest, res: Response) => {
+    try {
+        // Extract old password and new password from request body
+        const { oldPassword, newPassword } = req.body;
+
+        // Get restaurant by using user id pushed at middleware
+        const restaurant = await Restaurant.findById(req.user._id);
+
+        if (!restaurant) throw new ApiError(401, "Invalid refresh token");
+
+        // Check if the old password is correct
+        const isPasswordCorrect = await restaurant.isPasswordCorrect(oldPassword);
+
+        if (!isPasswordCorrect) throw new ApiError(400, "Invalid password");
+
+        // Update the restaurant's password
+        restaurant.password = newPassword;
+
+        await restaurant.save({ validateBeforeSave: false });
+
+        // Return a successful response after changing password
+        return res
+            .status(200)
+            .json(new ApiResponse(200, {}, "Password changed successfully"));
+    } catch (error) {
+        throw new ApiError(500, "An error occurred while changing the password");
+    }
+});
 
 
 export {
@@ -218,4 +247,5 @@ export {
     loginRestaurant,
     logoutRestaurant,
     refreshAccessToken,   
+    changeCurrentPassword,
 };
