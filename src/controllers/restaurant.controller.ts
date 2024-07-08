@@ -258,6 +258,49 @@ const getCurrentRestaurant = asyncHandler(async (req: AuthRequest, res: Response
     }
 });
 
+// Controller to update the details of the currently logged-in restaurant
+const updateRestaurantDetails = asyncHandler(async (req: AuthRequest, res: Response) => {
+    try {
+        // Destructure the request body to get the restaurant details
+        const {
+            displayName, managerName, address, city, state, country, pincode, status
+        }: IRestaurant = req.body;
+
+        // Check if at least one field is provided
+        const isAnyFieldFilled = [displayName, managerName, address, city, state, country, pincode, status]
+            .some(field => field !== undefined && field !== null && field !== '');
+
+        // If no field is provided, throw an error
+        if (!isAnyFieldFilled) throw new ApiError(400, "At least one of the following fields must be provided");
+
+        // Get the restaurant using the user ID stored in the request object by middleware
+        const restaurant = await Restaurant.findById(req.user._id).select("-password -refreshToken");
+
+        // If the restaurant is not found, throw an error
+        if (!restaurant) throw new ApiError(401, "Restaurant not found.");
+
+        // Update the restaurant details with the provided fields
+        if (displayName !== undefined) restaurant.displayName = displayName;
+        if (managerName !== undefined) restaurant.managerName = managerName;
+        if (address !== undefined) restaurant.address = address;
+        if (city !== undefined) restaurant.city = city;
+        if (state !== undefined) restaurant.state = state;
+        if (country !== undefined) restaurant.country = country;
+        if (pincode !== undefined) restaurant.pincode = pincode;
+        if (status !== undefined) restaurant.status = status;
+
+        // Save the updated restaurant details to the database
+        await restaurant.save();
+
+        // Respond with the updated restaurant details
+        return res
+            .status(200)
+            .json(new ApiResponse(200, restaurant, "Restaurant details updated successfully."));
+    } catch (error) {
+        throw new ApiError(500, "An error occurred while updating restaurant details");
+    }
+});
+
 
 export {
     registerRestaurant,
@@ -266,4 +309,5 @@ export {
     refreshAccessToken,   
     changeCurrentPassword,
     getCurrentRestaurant,
+    updateRestaurantDetails,
 };
