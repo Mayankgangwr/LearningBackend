@@ -301,13 +301,57 @@ const updateRestaurantDetails = asyncHandler(async (req: AuthRequest, res: Respo
     }
 });
 
+// Controller to update the avatar of the currently logged-in restaurant
+const updateRestaurantAvatar = asyncHandler(async (req: AuthRequest, res: Response) => {
+    try {
+        // Get the file path from the request file property added by middleware
+        const avatarLocalPath = req.file?.path;
+
+        // Check if an image file is provided
+        if (!avatarLocalPath) {
+            throw new ApiError(400, "Avatar file is missing");
+        }
+
+        // Upload the image to Cloudinary
+        const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+        // Check if the upload was successful
+        if (!avatar?.url) {
+            throw new ApiError(400, "Failed to upload avatar to Cloudinary");
+        }
+
+        // Get the restaurant by using the user ID added by middleware
+        const restaurant = await Restaurant.findByIdAndUpdate(
+            req.user._id,
+            {
+                $set: {
+                    avatar: avatar.url
+                }
+            },
+            { new: true }
+        ).select("-password -refreshToken"); // Exclude the password field from the result
+
+        // Check if the restaurant was found and updated
+        if (!restaurant) {
+            throw new ApiError(404, "Restaurant not found");
+        }
+
+        // Respond with the updated restaurant avatar
+        return res
+            .status(200)
+            .json(new ApiResponse(200, restaurant, "Restaurant avatar updated successfully."));
+    } catch (error) {
+        throw new ApiError(500, "An error occurred while updating the avatar");
+    }
+});
 
 export {
     registerRestaurant,
     loginRestaurant,
     logoutRestaurant,
-    refreshAccessToken,   
+    refreshAccessToken,
     changeCurrentPassword,
     getCurrentRestaurant,
     updateRestaurantDetails,
+    updateRestaurantAvatar
 };
