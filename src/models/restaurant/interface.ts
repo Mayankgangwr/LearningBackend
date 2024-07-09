@@ -4,6 +4,7 @@ export interface IRestaurant extends Document {
   username: string;
   password: string;
   avatar: string;
+  coverImage: string;
   managerName: string;
   phoneNumber: string;
   address: string;

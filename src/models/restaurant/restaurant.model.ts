@@ -8,6 +8,7 @@ const restaurantSchema: Schema<IRestaurant> = new mongoose.Schema<IRestaurant>({
     username: { type: String, required: true, unique: true, },
     password: { type: String, required: true },
     avatar: { type: String },
+    coverImage: { type: String },
     managerName: { type: String },
     phoneNumber: { type: String, required: true },
     address: { type: String, required: true },
