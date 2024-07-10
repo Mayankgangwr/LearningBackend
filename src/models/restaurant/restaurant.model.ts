@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const restaurantSchema: Schema<IRestaurant> = new mongoose.Schema<IRestaurant>({
+    planId: { type: mongoose.Schema.Types.ObjectId, ref: "Plan" },
     displayName: { type: String, required: true },
     username: { type: String, required: true, unique: true, },
     password: { type: String, required: true },
