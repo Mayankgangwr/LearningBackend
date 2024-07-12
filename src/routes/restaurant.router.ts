@@ -7,7 +7,8 @@ import {
     changeCurrentPassword,
     getCurrentRestaurant,
     updateRestaurantDetails,
-    updateRestaurantAvatar
+    updateRestaurantAvatar,
+    getRestaurantProfile
 } from "../controllers/restaurant.controller";
 import { uploadFile } from "../middlewares/multer.middleware";
 import { verifyRestaurantJWT } from "../middlewares/auth.middleware";
@@ -92,6 +93,11 @@ router.route("/update-avatar").patch(
     uploadFile.single('avatar'),  // Middleware to handle avatar file upload
     updateRestaurantAvatar  // Controller to handle avatar update
 );
+
+router.route("/profile/:username").get(
+    verifyRestaurantJWT,
+    getRestaurantProfile
+)
 
 router.route
 

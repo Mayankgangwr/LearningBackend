@@ -263,15 +263,16 @@ const updateRestaurantDetails = asyncHandler(async (req: AuthRequest, res: Respo
     try {
         // Destructure the request body to get the restaurant details
         const {
-            displayName, managerName, address, city, state, country, pincode, status
+            displayName, managerName, address, city, state, country, pincode, status = true
         }: IRestaurant = req.body;
 
         // Check if at least one field is provided
-        const isAnyFieldFilled = [displayName, managerName, address, city, state, country, pincode, status]
+        const isAnyFieldFilled = [displayName, managerName, address, city, state, country, pincode]
             .some(field => field !== undefined && field !== null && field !== '');
 
         // If no field is provided, throw an error
         if (!isAnyFieldFilled) throw new ApiError(400, "At least one of the following fields must be provided");
+
 
         // Get the restaurant using the user ID stored in the request object by middleware
         const restaurant = await Restaurant.findById(req.user._id).select("-password -refreshToken");
@@ -280,14 +281,14 @@ const updateRestaurantDetails = asyncHandler(async (req: AuthRequest, res: Respo
         if (!restaurant) throw new ApiError(401, "Restaurant not found.");
 
         // Update the restaurant details with the provided fields
-        if (displayName !== undefined) restaurant.displayName = displayName;
-        if (managerName !== undefined) restaurant.managerName = managerName;
-        if (address !== undefined) restaurant.address = address;
-        if (city !== undefined) restaurant.city = city;
-        if (state !== undefined) restaurant.state = state;
-        if (country !== undefined) restaurant.country = country;
-        if (pincode !== undefined) restaurant.pincode = pincode;
-        if (status !== undefined) restaurant.status = status;
+        restaurant.displayName = displayName || restaurant.displayName;
+        restaurant.managerName = managerName || restaurant.managerName;
+        restaurant.address = address || restaurant.address;
+        restaurant.city = city || restaurant.city;
+        restaurant.state = state || restaurant.state;
+        restaurant.country = country || restaurant.country;
+        restaurant.pincode = pincode || restaurant.pincode;
+        restaurant.status = status || restaurant.status;
 
         // Save the updated restaurant details to the database
         await restaurant.save();
@@ -345,6 +346,61 @@ const updateRestaurantAvatar = asyncHandler(async (req: AuthRequest, res: Respon
     }
 });
 
+// Controller to get profile of the currently logged-in restaurant
+const getRestaurantProfile = asyncHandler(async (req: AuthRequest, res: Response) => {
+    try {
+
+        const { username } = req.params;
+
+        console.log(req.params)
+        if (!username?.trim()) throw new ApiError(400, "Username is missing");
+
+        const restaurant = await Restaurant.aggregate([
+            {
+                $match: { username }
+            },
+            {
+                $lookup: {
+                    from: "plans",
+                    localField: "_id",
+                    foreignField: "planId",
+                    as: "activePlan"
+
+                }
+            },
+            {
+                $lookup: {
+                    from: "workers",
+                    localField: "restroId",
+                    foreignField: "_id",
+                    as: "totalEmployees"
+
+                }
+            },
+            {
+                $addFields: {
+                    totalEmployeesCount: { $size: "$totalEmployees" }
+                }
+            },
+            {
+                $project: {
+                    
+                }
+            }
+        ])
+        //const restaurant = await Restaurant.find({ username });
+
+
+
+        // Respond with the updated restaurant avatar
+        return res
+            .status(200)
+            .json(new ApiResponse(200, restaurant, "Restaurant avatar updated successfully."));
+    } catch (error) {
+        throw new ApiError(500, "An error occurred while updating the avatar");
+    }
+});
+
 export {
     registerRestaurant,
     loginRestaurant,
@@ -353,5 +409,6 @@ export {
     changeCurrentPassword,
     getCurrentRestaurant,
     updateRestaurantDetails,
-    updateRestaurantAvatar
+    updateRestaurantAvatar,
+    getRestaurantProfile
 };
