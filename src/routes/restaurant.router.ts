@@ -94,6 +94,11 @@ router.route("/update-avatar").patch(
     updateRestaurantAvatar  // Controller to handle avatar update
 );
 
+/**
+ * @route GET /api/restaurants/me
+ * @desc Get the current restaurant's details
+ * @access Private (requires authentication)
+ */
 router.route("/profile/:username").get(
     verifyRestaurantJWT,
     getRestaurantProfile
