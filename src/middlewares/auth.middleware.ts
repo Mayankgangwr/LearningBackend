@@ -3,32 +3,49 @@ import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/apiError";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import Restaurant from "../models/restaurant/restaurant.model";
-import { AuthRequest } from "../types";
+import { AuthRequest, Roles } from "../types";
 import Worker from "../models/worker/worker.model";
+import SuperAdmin from "../models/SuperAdmin/SuperAdmin.model";
 
 
 // Function to decode JWT and return the payload
-const decodedJWT = async (accessToken: string): Promise<JwtPayload> => {
+const decodedJWT = async (accessToken: string, accessTokenSecret: string): Promise<JwtPayload> => {
     if (!accessToken) throw new ApiError(401, "Unauthorized request");
     try {
-        const decodedToken = jwt.verify(accessToken, String(process.env.ACCESS_TOKEN_SECRET)) as JwtPayload;
+        const decodedToken = jwt.verify(accessToken, accessTokenSecret) as JwtPayload;
         return decodedToken;
     } catch (error) {
         throw new ApiError(401, "Invalid access token");
     }
 };
 
+// Middleware to verify JWT and attach SuperAdmin(user) to request
+export const verifySuperAdminJWT = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
+    const accessToken = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
+    const decodedToken = await decodedJWT(accessToken, String(process.env.SuperAdmin_ACCESS_TOKEN_SECRET));
+    // Check if _id is present
+    if (!decodedToken._id) throw new ApiError(401, "Invalid access token");
+
+    // Find the super admin by the decoded _id
+    const superAdmin = await SuperAdmin.findById(decodedToken._id).select("-password -refreshToken");
+    if (!superAdmin) throw new ApiError(401, "Invalid access token");
+    console.log(superAdmin)
+    // Attach super admin to request
+    req.user = superAdmin;
+    next();
+});
+
 // Middleware to verify JWT and attach Restaurant(user) to request
 export const verifyRestaurantJWT = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
     const accessToken = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-    const decodedToken = await decodedJWT(accessToken);
+    const decodedToken = await decodedJWT(accessToken, String(process.env.ACCESS_TOKEN_SECRET));
     // Check if _id is present
     if (!decodedToken._id) throw new ApiError(401, "Invalid access token");
 
     // Find the restaurant by the decoded _id
     const restaurant = await Restaurant.findById(decodedToken._id).select("-password -refreshToken");
     if (!restaurant) throw new ApiError(401, "Invalid access token");
-
+    console.log(restaurant)
     // Attach restaurant to request
     req.user = restaurant;
     next();
@@ -37,7 +54,7 @@ export const verifyRestaurantJWT = asyncHandler(async (req: AuthRequest, res: Re
 // Middleware to verify JWT and attach Worker(user) to request
 export const verifyWorkerJWT = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
     const accessToken = req.cookies?.accessWorkerToken || req.header("Authorization")?.replace("Bearer ", "");
-    const decodedToken = await decodedJWT(accessToken);
+    const decodedToken = await decodedJWT(accessToken, String(process.env.ACCESS_TOKEN_SECRET));
     // Check if _id is present
     if (!decodedToken._id) throw new ApiError(401, "Invalid access token");
 
@@ -49,3 +66,4 @@ export const verifyWorkerJWT = asyncHandler(async (req: AuthRequest, res: Respon
     req.user = worker;
     next();
 });
+
