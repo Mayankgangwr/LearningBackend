@@ -1,8 +1,8 @@
-import mongoose, { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export interface ISubscription extends Document {
-    restroId: mongoose.Schema.Types.ObjectId;
-    planId: mongoose.Schema.Types.ObjectId;
+    restroId: Types.ObjectId;
+    planId: Types.ObjectId;
     price: number;
     status: boolean;
 }
