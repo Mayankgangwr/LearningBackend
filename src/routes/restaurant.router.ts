@@ -16,7 +16,7 @@ import { verifyRestaurantJWT } from "../middlewares/auth.middleware";
 const router = Router();
 
 /**
- * @route POST /api/restaurants/register
+ * @route POST /api/restaurant/register
  * @desc Register a new restaurant
  * @access Public
  */
@@ -26,7 +26,7 @@ router.route("/register").post(
 );
 
 /**
- * @route POST /api/restaurants/login
+ * @route POST /api/restaurant/login
  * @desc Login a restaurant and return JWT
  * @access Public
  */
@@ -35,7 +35,7 @@ router.route("/login").post(
 );
 
 /**
- * @route POST /api/restaurants/logout
+ * @route POST /api/restaurant/logout
  * @desc Logout a restaurant and invalidate JWT
  * @access Private (requires authentication)
  */
@@ -45,7 +45,7 @@ router.route("/logout").post(
 );
 
 /**
- * @route POST /api/restaurants/refresh-token
+ * @route POST /api/restaurant/refresh-token
  * @desc Refresh the access token for an authenticated restaurant
  * @access Public
  */
@@ -54,7 +54,7 @@ router.route("/refresh-token").post(
 );
 
 /**
- * @route GET /api/restaurants/me
+ * @route GET /api/restaurant/me
  * @desc Get the current restaurant's details
  * @access Private (requires authentication)
  */
@@ -64,7 +64,7 @@ router.route("/me").get(
 );
 
 /**
- * @route PUT /api/restaurants/change-password
+ * @route PUT /api/restaurant/change-password
  * @desc Change the current restaurant's password
  * @access Private (requires authentication)
  */
@@ -74,7 +74,7 @@ router.route("/change-password").put(
 );
 
 /**
- * @route PATCH /api/restaurants/update-details
+ * @route PATCH /api/restaurant/update-details
  * @desc Update the current restaurant's details
  * @access Private (requires authentication)
  */
@@ -84,7 +84,7 @@ router.route("/update-details").patch(
 );
 
 /**
- * @route PATCH /api/restaurants/update-avatar
+ * @route PATCH /api/restaurant/update-avatar
  * @desc Update the current restaurant's avatar
  * @access Private (requires authentication)
  */
@@ -95,15 +95,13 @@ router.route("/update-avatar").patch(
 );
 
 /**
- * @route GET /api/restaurants/me
+ * @route GET /api/restaurant/profile/:username
  * @desc Get the current restaurant's details
  * @access Private (requires authentication)
  */
 router.route("/profile/:username").get(
-    verifyRestaurantJWT,
-    getRestaurantProfile
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    getRestaurantProfile // Controller to handle get restaurant profile
 )
-
-router.route
 
 export default router;
