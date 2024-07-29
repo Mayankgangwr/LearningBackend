@@ -18,14 +18,17 @@ export interface IWorker extends Document {
     country: string;
     pincode: string
     isLoggedIn: boolean;
+    status: boolean;
 }
 
 export interface IWorkerRole extends Document {
     restroId: mongoose.Schema.Types.ObjectId;
     displayName: string;
+    status: boolean;
 }
 
 export interface IWorkerShift extends Document {
     restroId: mongoose.Schema.Types.ObjectId;
     displayName: string;
+    status: boolean;
 }
