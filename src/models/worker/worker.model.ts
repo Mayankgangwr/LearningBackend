@@ -22,6 +22,7 @@ const workerSchema: Schema<IWorker> = new mongoose.Schema<IWorker>({
     country: { type: String, required: true },
     pincode: { type: String, required: true },
     isLoggedIn: { type: Boolean, required: true },
+    status: { type: Boolean, default: true }
 },
     {
         timestamps: true
