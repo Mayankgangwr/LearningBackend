@@ -10,7 +10,7 @@ export interface IProduct extends Document {
   avatar?: string;
   status?: boolean;
 }
-export interface IProductCategoty extends Document {
-    restroId: mongoose.Schema.Types.ObjectId;
+export interface IProductCategory extends Document {
+    restroId: Types.ObjectId;
     displayName: string;
 }
