@@ -220,7 +220,7 @@ const changeCurrentPassword = asyncHandler(async (req: AuthRequest, res: Respons
         // Get restaurant by using user id pushed at middleware
         const restaurant = await Restaurant.findById(req.user._id);
 
-        if (!restaurant) throw new ApiError(401, "Invalid refresh token");
+        if (!restaurant) throw new ApiError(401, "Restaurant not found.");
 
         // Check if the old password is correct
         const isPasswordCorrect = await restaurant.isPasswordCorrect(oldPassword);
@@ -246,7 +246,6 @@ const getCurrentRestaurant = asyncHandler(async (req: AuthRequest, res: Response
     try {
         // Get restaurant by using user id pushed at middleware
         const restaurant = await Restaurant.findById(req.user._id).select("-password -refreshToken");
-
         if (!restaurant) throw new ApiError(401, "Invalid refresh token");
 
         // Return a successful response of the current logged restaurant
@@ -352,7 +351,6 @@ const getRestaurantProfile = asyncHandler(async (req: AuthRequest, res: Response
 
         const { username } = req.params;
 
-        console.log(req.params)
         if (!username?.trim()) throw new ApiError(400, "Username is missing");
 
         const restaurant = await Restaurant.aggregate([
@@ -384,13 +382,24 @@ const getRestaurantProfile = asyncHandler(async (req: AuthRequest, res: Response
             },
             {
                 $project: {
-                    
+                    _id: 1,
+                    displayName: 1,
+                    username: 1,
+                    avatar: 1,
+                    managerName: 1,
+                    phoneNumber: 1,
+                    address: 1,
+                    city: 1,
+                    state: 1,
+                    country: 1,
+                    pincode: 1,
+                    activePlan: 1,
+                    totalEmployees: 1,
+                    totalEmployeesCount: 1,
+
                 }
             }
         ])
-        //const restaurant = await Restaurant.find({ username });
-
-
 
         // Respond with the updated restaurant avatar
         return res
