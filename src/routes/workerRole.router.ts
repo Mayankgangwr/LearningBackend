@@ -49,7 +49,7 @@ router.get(
  * @access Private (requires authentication)
  */
 router.patch(
-    '/:id',
+    '/',
     verifyRestaurantJWT,   // Middleware to verify JWT
     updateWorkerRole       // Controller to update a specific worker role
 );
