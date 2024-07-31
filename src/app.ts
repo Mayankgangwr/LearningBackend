@@ -23,6 +23,8 @@ app.use(cookieParser());
 import superAdminRouter from "./routes/superAdmin.route";
 import restaurantRouter from "./routes/restaurant.router";
 import workerRoleRouter from "./routes/workerRole.router";
+import workerShiftRouter from "./routes/workerShift.router";
+import workerRouter from "./routes/worker.router";
 import productRouter from "./routes/product.route";
 import productCategotRouter from "./routes/productCategory.route";
 import planRouter from "./routes/plan.route";
@@ -47,6 +49,12 @@ app.use("/api/v1/restaurant", restaurantRouter);
 
 //route for worker role
 app.use("/api/v1/worker-role", workerRoleRouter);
+
+//route for worker shift
+app.use("/api/v1/worker-shift", workerShiftRouter);
+
+//route for worker
+app.use("/api/v1/worker", workerRouter);
 
 // route for product
 app.use("/api/v1/product", productRouter);
