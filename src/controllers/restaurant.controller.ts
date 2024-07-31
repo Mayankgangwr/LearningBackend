@@ -76,7 +76,7 @@ const registerRestaurant = asyncHandler(async (req: Request, res: Response) => {
             new ApiResponse(201, createdRestaurant, "Restaurant registered successfully")
         );
     } catch (error) {
-        throw new ApiError(500, "An error occurred during registration");
+        throw new ApiError(500, `An error occurred during registration: ${error}`);
     }
 });
 
@@ -406,7 +406,7 @@ const getRestaurantProfile = asyncHandler(async (req: AuthRequest, res: Response
             .status(200)
             .json(new ApiResponse(200, restaurant, "Restaurant avatar updated successfully."));
     } catch (error) {
-        throw new ApiError(500, "An error occurred while updating the avatar");
+        throw new ApiError(500, "An error occurred while  fetching restaurant profile data.");
     }
 });
 
