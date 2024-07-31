@@ -12,6 +12,7 @@ import {
 } from "../controllers/restaurant.controller";
 import { uploadFile } from "../middlewares/multer.middleware";
 import { verifyRestaurantJWT } from "../middlewares/auth.middleware";
+import { changeCurrentPasswordByRestaurant, deleteWorker, getAllWorkers, getWorker, insertWorker, updateWorkerByRestaurant } from "../controllers/worker.controller";
 
 const router = Router();
 
@@ -103,5 +104,69 @@ router.route("/profile/:username").get(
     verifyRestaurantJWT,  // Middleware to verify JWT
     getRestaurantProfile // Controller to handle get restaurant profile
 )
+
+// route for worker
+
+/**
+ * @route POST /api/v1/restaurant/worker
+ * @desc Insert a new worker
+ * @access Private (requires authentication)
+ */
+router.route('/worker').post(
+    verifyRestaurantJWT,   // Middleware to verify JWT
+    uploadFile.single('avatar'),  // Middleware to handle avatar file upload
+    insertWorker              // Controller to handle inserting a worker
+);
+
+/**
+ * @route GET /api/restaurant/worker/list
+ * @desc get details of all existing workers
+ * @access Private (requires authentication)
+ */
+router.route("/worker/list").get(
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    getAllWorkers // Controller to handle get all workers
+);
+
+/**
+ * @route GET /api/restaurant/worker/:id
+ * @desc get details of an existing worker
+ * @access Private (requires authentication)
+ */
+router.route("/worker/:id").get(
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    getWorker // Controller to handle get worker
+);
+
+
+/**
+ * @route PATCH /api/restaurant/worker/:id
+ * @desc update details of an existing worker
+ * @access Private (requires authentication)
+ */
+router.route("/worker/").patch(
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    updateWorkerByRestaurant // Controller to handle update worker
+);
+
+/**
+ * @route PATCH /api/restaurant/worker/:id
+ * @desc update details of an existing worker
+ * @access Private (requires authentication)
+ */
+router.route("/worker/change-password").patch(
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    changeCurrentPasswordByRestaurant // Controller to handle update worker
+);
+
+/**
+ * @route DELETE /api/restaurant/worker/:id
+ * @desc get details of all existing workers
+ * @access Private (requires authentication)
+ */
+router.route("/worker/:id").delete(
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    deleteWorker // Controller to delete worker
+);
 
 export default router;
