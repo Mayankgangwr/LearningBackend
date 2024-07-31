@@ -183,7 +183,7 @@ const refreshAccessToken = asyncHandler(async (req: Request, res: Response) => {
 
         const decodedToken = jwt.verify(
             incomingRefreshToken,
-            String(process.env.REFRESH_TOKEN_SECRET)
+            String(process.env.RESTAURANT_REFRESH_TOKEN_SECRET)
         ) as JwtPayload;
 
         // Find the restaurant based on restaurant id

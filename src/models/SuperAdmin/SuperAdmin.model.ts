@@ -38,9 +38,9 @@ superAdminSchema.methods.generateAccessToken = function () {
             displayName: this.displayName,
             username: this.username,
         },
-        process.env.SuperAdmin_ACCESS_TOKEN_SECRET || "D2DCDC74FD7D3F6FD138F36EDCF18",
+        process.env.SUPERADMIN_ACCESS_TOKEN_SECRET || "D2DCDC74FD7D3F6FD138F36EDCF18",
         {
-            expiresIn: process.env.SuperAdmin_ACCESS_TOKEN_EXPIRY || "1d"
+            expiresIn: process.env.SUPERADMIN_ACCESS_TOKEN_EXPIRY || "1d"
         }
     )
 }
@@ -52,9 +52,9 @@ superAdminSchema.methods.generateRefreshToken = function () {
             _id: this._id,
             username: this.username,
         },
-        process.env.SuperAdmin_REFRESH_TOKEN_SECRET || "95958DF847436FBCAFA92FA1EF1DD",
+        process.env.SUPERADMIN_REFRESH_TOKEN_SECRET || "95958DF847436FBCAFA92FA1EF1DD",
         {
-            expiresIn: process.env.SuperAdmin_REFRESH_TOKEN_EXPIRY || "2d"
+            expiresIn: process.env.SUPERADMIN_REFRESH_TOKEN_EXPIRY || "2d"
         }
     )
 }

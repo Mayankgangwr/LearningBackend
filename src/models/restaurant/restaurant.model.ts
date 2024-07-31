@@ -48,9 +48,9 @@ restaurantSchema.methods.generateAccessToken = function () {
             displayName: this.displayName,
             username: this.username,
         },
-        process.env.ACCESS_TOKEN_SECRET || "D2DDDC74FD7D3F6FD138F36EDCF18",
+        process.env.RESTAURANT_ACCESS_TOKEN_SECRET || "D2DDDC74FD7D3F6FD138F36EDCF18",
         {
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRY || "1d"
+            expiresIn: process.env.RESTAURANT_ACCESS_TOKEN_EXPIRY || "1d"
         }
     )
 }
@@ -62,9 +62,9 @@ restaurantSchema.methods.generateRefreshToken = function () {
             _id: this._id,
             username: this.username,
         },
-        process.env.REFRESH_TOKEN_SECRET || "99558DF847436FBCAFA92FA1EF1DD",
+        process.env.RESTAURANT_REFRESH_TOKEN_SECRET || "99558DF847436FBCAFA92FA1EF1DD",
         {
-            expiresIn: process.env.REFRESH_TOKEN_EXPIRY || "10d"
+            expiresIn: process.env.RESTAURANT_REFRESH_TOKEN_EXPIRY || "10d"
         }
     )
 }

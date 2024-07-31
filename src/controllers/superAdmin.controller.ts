@@ -224,7 +224,7 @@ const refreshAccessToken = asyncHandler(async (req: Request, res: Response) => {
         // Verify the refresh token
         const decodedToken = jwt.verify(
             incomingRefreshToken,
-            String(process.env.SuperAdmin_REFRESH_TOKEN_SECRET)
+            String(process.env.SUPERADMIN_REFRESH_TOKEN_SECRET)
         ) as JwtPayload;
 
         // Find the super admin based on the decoded token ID

@@ -22,7 +22,7 @@ const decodedJWT = async (accessToken: string, accessTokenSecret: string): Promi
 // Middleware to verify JWT and attach SuperAdmin(user) to request
 export const verifySuperAdminJWT = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
     const accessToken = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-    const decodedToken = await decodedJWT(accessToken, String(process.env.SuperAdmin_ACCESS_TOKEN_SECRET));
+    const decodedToken = await decodedJWT(accessToken, String(process.env.SUPERADMIN_ACCESS_TOKEN_SECRET));
     // Check if _id is present
     if (!decodedToken._id) throw new ApiError(401, "Invalid access token");
 
@@ -37,7 +37,7 @@ export const verifySuperAdminJWT = asyncHandler(async (req: AuthRequest, res: Re
 // Middleware to verify JWT and attach Restaurant(user) to request
 export const verifyRestaurantJWT = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
     const accessToken = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
-    const decodedToken = await decodedJWT(accessToken, String(process.env.ACCESS_TOKEN_SECRET));
+    const decodedToken = await decodedJWT(accessToken, String(process.env.RESTAURANT_ACCESS_TOKEN_SECRET));
     // Check if _id is present
     if (!decodedToken._id) throw new ApiError(401, "Invalid access token");
 
