@@ -77,12 +77,13 @@ const getWorkerRole = asyncHandler(async (req: AuthRequest, res: Response) => {
 const updateWorkerRole = asyncHandler(async (req: AuthRequest, res: Response) => {
     try {
         // Extract the new displayName from the request body
-        const { displayName } = req.body;
-        if (!displayName) throw new ApiError(400, "Role name is required.");
+        const { id, displayName } = req.body;
 
         // Extract the role ID from the request params
-        const { id } = req.params;
         if (!id) throw new ApiError(401, "Role ID is missing.");
+
+        if (!displayName) throw new ApiError(400, "Role name is required.");
+
 
         // Find the worker role by ID
         const workerRole = await WorkerRole.findById(id);
