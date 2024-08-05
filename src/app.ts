@@ -21,13 +21,14 @@ app.use(cookieParser());
 
 //routes import
 import superAdminRouter from "./routes/superAdmin.route";
+import planRouter from "./routes/plan.route";
 import restaurantRouter from "./routes/restaurant.router";
 import workerRoleRouter from "./routes/workerRole.router";
 import workerShiftRouter from "./routes/workerShift.router";
 import workerRouter from "./routes/worker.router";
 import productRouter from "./routes/product.route";
 import productCategotRouter from "./routes/productCategory.route";
-import planRouter from "./routes/plan.route";
+import orderStatusRouter from "./routes/orderStatus.route";
 
 
 //routes declaration
@@ -44,6 +45,9 @@ i have used restaurant because this api for restaurant
 // route for super admin
 app.use("/api/v1/admin", superAdminRouter);
 
+// route for plan
+app.use("/api/v1/plan", planRouter);
+
 // route for restaurant
 app.use("/api/v1/restaurant", restaurantRouter);
 
@@ -56,14 +60,18 @@ app.use("/api/v1/worker-shift", workerShiftRouter);
 //route for worker
 app.use("/api/v1/worker", workerRouter);
 
+// route for product catagory
+app.use("/api/v1/category", productCategotRouter);
+
 // route for product
 app.use("/api/v1/product", productRouter);
 
-// route for product
-app.use("/api/v1/category", productCategotRouter);
+// route for order status
+app.use("/appi/v1/order-status", orderStatusRouter);
 
-// route for plan
-app.use("/api/v1/plan", planRouter);
+
+
+
 
 app.get("/", (req: Request, res: Response) => {
   res.send(process.env.CLOUDINARY_NAME);
