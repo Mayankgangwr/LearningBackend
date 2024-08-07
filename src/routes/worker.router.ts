@@ -11,6 +11,8 @@ import {
 } from "../controllers/worker.controller";
 import { verifyWorkerJWT } from "../middlewares/auth.middleware";
 import { uploadFile } from "../middlewares/multer.middleware";
+import { deleteOrder, getAllOrder, getOrder, placeOrder, updateOrder } from "../controllers/order.controller";
+import { create } from "domain";
 
 const router = Router();
 
@@ -93,5 +95,60 @@ router.route("/profile/:username").get(
 router.route("/refresh-token").post(
     refreshAccessToken  // Controller to handle token refresh
 );
+
+
+// route for order
+/**
+ * @route POST /api/worker/order
+ * @desc add new order
+ * @access Private (requires authentication)
+ */
+router.route("/order").post(
+    verifyWorkerJWT,  // Middleware to verify JWT
+    placeOrder // Controller to handle add new order
+);
+
+/**
+ * @route GET /api/worker/order
+ * @desc get the list of orders
+ * @access Private (requires authentication)
+ */
+router.route("/order/list").get(
+    verifyWorkerJWT,  // Middleware to verify JWT
+    getAllOrder // Controller to get the list of orders
+);
+
+/**
+ * @route GET /api/worker/order/:id
+ * @desc get details of an order
+ * @access Private (requires authentication)
+ */
+router.route("/order/:id").get(
+    verifyWorkerJWT,  // Middleware to verify JWT
+    getOrder // Controller to get an order
+);
+
+/**
+ * @route PATCH /api/worker/order
+ * @desc update details of an existing order
+ * @access Private (requires authentication)
+ */
+router.route("/order").patch(
+    verifyWorkerJWT,  // Middleware to verify JWT
+    updateOrder // Controller to handle update order
+);
+
+/**
+ * @route DELETE /api/worker/order/:id
+ * @desc delete details of an existing order
+ * @access Private (requires authentication)
+ */
+router.route("/order/:id").patch(
+    verifyWorkerJWT,  // Middleware to verify JWT
+    deleteOrder // Controller to handle delete order
+);
+
+
+
 
 export default router;

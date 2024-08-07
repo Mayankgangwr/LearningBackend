@@ -29,7 +29,7 @@ import workerRouter from "./routes/worker.router";
 import productRouter from "./routes/product.route";
 import productCategotRouter from "./routes/productCategory.route";
 import orderStatusRouter from "./routes/orderStatus.route";
-
+import orderRouter from "./routes/order.route";
 
 //routes declaration
 
@@ -67,8 +67,10 @@ app.use("/api/v1/category", productCategotRouter);
 app.use("/api/v1/product", productRouter);
 
 // route for order status
-app.use("/appi/v1/order-status", orderStatusRouter);
+app.use("/api/v1/order-status", orderStatusRouter);
 
+// route for order status
+app.use("/api/v1/order", orderRouter);
 
 
 

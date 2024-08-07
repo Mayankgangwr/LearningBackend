@@ -12,14 +12,14 @@ const orderSchema: Schema<IOrder> = new mongoose.Schema<IOrder>({
     statusId: { type: mongoose.Schema.Types.ObjectId, ref: "OrderStatus", required: true },
     items: [itemSchema],
     customerName: { type: String, required: true },
+    customerNumber: { type: String, default: null },
     tableNumber: { type: Number, required: true },
     totalAmount: { type: Number, required: true },
 },
     {
         timestamps: true
     }
-)
-
+);
 
 const Order: Model<IOrder> = mongoose.model<IOrder>("Order", orderSchema);
 

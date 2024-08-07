@@ -1,22 +1,23 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Types } from "mongoose";
 
 
 export interface IOrderedProduct extends Document {
-    productId: mongoose.Schema.Types.ObjectId;
+    productId: Types.ObjectId;
     price: number;
     quantity: number;
 };
 
 export interface IOrder extends Document {
-    restroId: mongoose.Schema.Types.ObjectId;
-    statusId: mongoose.Schema.Types.ObjectId;
+    restroId: Types.ObjectId;
+    statusId: Types.ObjectId;
     items: IOrderedProduct[];
     customerName: string;
+    customerNumber: string;
     tableNumber: number;
     totalAmount: number;
 };
 
 export interface IOrderStatus extends Document {
-    restroId: mongoose.Schema.Types.ObjectId;
+    restroId: Types.ObjectId;
     displayName: string;
 };

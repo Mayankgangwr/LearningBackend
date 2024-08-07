@@ -13,6 +13,7 @@ import {
 import { uploadFile } from "../middlewares/multer.middleware";
 import { verifyRestaurantJWT } from "../middlewares/auth.middleware";
 import { changeCurrentPasswordByRestaurant, deleteWorker, getAllWorkers, getWorker, insertWorker, updateWorkerByRestaurant } from "../controllers/worker.controller";
+import { deleteOrder, getAllOrder, getOrder, placeOrder, updateOrder } from "../controllers/order.controller";
 
 const router = Router();
 
@@ -167,6 +168,59 @@ router.route("/worker/change-password").patch(
 router.route("/worker/:id").delete(
     verifyRestaurantJWT,  // Middleware to verify JWT
     deleteWorker // Controller to delete worker
+);
+
+
+// route for order
+
+/**
+ * @route POST /api/restaurant/order
+ * @desc add new order
+ * @access Private (requires authentication)
+ */
+router.route("/order").post(
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    placeOrder // Controller to handle add new order
+);
+
+/**
+ * @route GET /api/restaurant/order
+ * @desc get the list of orders
+ * @access Private (requires authentication)
+ */
+router.route("/order/list").get(
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    getAllOrder // Controller to get the list of orders
+);
+
+/**
+ * @route GET /api/restaurant/order/:id
+ * @desc get details of an order
+ * @access Private (requires authentication)
+ */
+router.route("/order/:id").get(
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    getOrder // Controller to get an order
+);
+
+/**
+ * @route PATCH /api/restaurant/order
+ * @desc update details of an existing order
+ * @access Private (requires authentication)
+ */
+router.route("/order").patch(
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    updateOrder // Controller to handle update order
+);
+
+/**
+ * @route DELETE /api/restaurant/order/:id
+ * @desc delete details of an existing order
+ * @access Private (requires authentication)
+ */
+router.route("/order/:id").patch(
+    verifyRestaurantJWT,  // Middleware to verify JWT
+    deleteOrder // Controller to handle delete order
 );
 
 export default router;
