@@ -36,28 +36,31 @@ const insertOrderStatus = asyncHandler(async (req: AuthRequest, res: Response) =
     }
 });
 
-// Controller to fetch all order statuses for a specific restaurant
 const getAllOrderStatus = asyncHandler(async (req: AuthRequest, res: Response) => {
     try {
-        const restroId = req.params.restroId ? new mongoose.Types.ObjectId(req.params.restroId) : undefined;
-
+        // Extract restaurant ID from the request
+        const restroId = req.user?._id;
         // Ensure restaurant ID is provided
-        if (!restroId) throw new ApiError(401, "Restaurant ID is missing.");
+        if (!restroId) {
+            throw new ApiError(400, "Invalid or missing Restaurant ID.");
+        }
 
         // Find all order statuses for the given restaurant
         const orderStatuses = await OrderStatus.find({ restroId });
 
-        // Ensure order statuses were found
-        if (!orderStatuses) throw new ApiError(404, "Order statuses not found.");
+        // Check if any order statuses were found
+        if (orderStatuses.length === 0) {
+            return res.status(404).json(new ApiResponse(404, [], "No order statuses found for the specified restaurant."));
+        }
 
         // Return a successful response with the list of order statuses
-        return res.status(200)
-            .json(new ApiResponse(200, orderStatuses, "List of order statuses fetched successfully."));
+        return res.status(200).json(new ApiResponse(200, orderStatuses, "List of order statuses fetched successfully."));
     } catch (error) {
+        // Handle any unexpected errors
+        console.error(error); // Log the error for debugging
         throw new ApiError(500, "An unexpected error occurred while fetching the list of order statuses.");
     }
 });
-
 // Controller to fetch a specific order status by ID
 const getOrderStatus = asyncHandler(async (req: AuthRequest, res: Response) => {
     try {
@@ -118,8 +121,8 @@ const deleteOrderStatus = asyncHandler(async (req: AuthRequest, res: Response) =
         if (!id) throw new ApiError(400, "Order status ID is missing.");
 
         // Delete the order status by ID
-        await OrderStatus.findByIdAndDelete(id);
-
+        const isDelete = await OrderStatus.findByIdAndDelete(id);
+        
         // Return a successful response indicating the order status was deleted
         return res.status(200)
             .json(new ApiResponse(200, true, "Order status deleted successfully."));

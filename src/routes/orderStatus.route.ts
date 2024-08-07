@@ -27,7 +27,7 @@ router.post(
  * @access Private (requires authentication)
  */
 router.get(
-    '/list/:restroId',
+    '/list/',
     verifyRestaurantJWT,   // Middleware to verify JWT
     getAllOrderStatus       // Controller to fetch all order statuses for the restaurant
 );
